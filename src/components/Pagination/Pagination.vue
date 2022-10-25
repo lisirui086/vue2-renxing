@@ -33,6 +33,9 @@
 <script>
 export default {
   name: "Pagination",
+  // 父组件传参 
+  // pageNo当前页  total总条数  pageSize每页条数  continues连续条数  
+  // 可以计算出totalPage l=total / pageSize 多少页
   props: ['pageNo', 'pageSize', 'total', 'continues'],
   // 计算属性
   computed: {
@@ -41,15 +44,14 @@ export default {
       // 向上取整
       return Math.ceil(this.total / this.pageSize)
     },
-
     // 开头、连续五个数字、结尾
+    // 计算出连续的页码的起始数字与结束数字 【 连续页码至少是5 】 
     StartAndEnd() {
       // 给开头和结尾定义初始值
       let start = 0, end = 0;
       // 解构赋值 总页数，连续页数，当前页数
       const { totalPage, continues, pageNo } = this
-      // 特殊情况，总页数小于连续页码数
-
+      // 特殊情况，总页数小于连续页码数 （5页）
       if (totalPage < continues) {
         // 开始页为1，结尾是总页数
         start = 1
