@@ -12,4 +12,6 @@ export const reqGetBannerList = () => mockRequests.get('/banner')
 // views/Home/floor 
 export const reqFloorList = ()=> mockRequests({url:'/floor',method:'get'});
 // views/search/search
-export const reqGetSearchInfo = (params) => requests({url:'/list', method:'POST', data:params})
+export const reqGetSearchInfo = (params) => requests({ url: '/list', method: 'POST', data: params })
+// views/Detail/detail 获取产品详细信息的接口 URL: /api/item/{ skuId }
+export const reqGoodsInfo = (skuId) => requests({url:`/item/${skuId}`,method:'get'})

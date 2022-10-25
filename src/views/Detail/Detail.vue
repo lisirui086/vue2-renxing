@@ -349,12 +349,18 @@
 <script>
 import ImageList from './ImageList/ImageList'
 import Zoom from './Zoom/Zoom'
+// 引入vuex
 
 export default {
   name: 'Detail',
   components: {
     ImageList,
     Zoom
+  },
+  // 挂载后
+  mounted() {
+    // 组件挂在完毕后展示产品详细信息
+    this.$store.dispatch('getGoodsInfo',this.$route.params.skuId)
   }
 }
 </script>

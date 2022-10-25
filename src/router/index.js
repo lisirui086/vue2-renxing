@@ -48,6 +48,7 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   // 配置路由规则
   routes,
+  // 滚动行为 想要页面滚到顶部
   scrollBehavior(to, from, savedPosition) {
     return { x: 0, y: 0 }
   },

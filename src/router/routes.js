@@ -27,7 +27,7 @@ export default [
   },
   {
     name: 'Detail',
-    path: '/detail/:skuid',
+    path: '/detail/:skuId',
     component: Detail,
     meta: { isShow: true },
   },
