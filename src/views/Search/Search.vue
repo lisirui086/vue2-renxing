@@ -257,7 +257,6 @@ export default {
   // 侦听
   watch: {
     $route() {
-
       // 每次请求完毕，应该把相应的1，2，3级分类的id置空，让他接收下次相应的123
       // 分类名和关键字不用清理，因为每次路由发生变化都会赋予新的数据
       this.searchParams.category1Id = undefined

@@ -6,7 +6,6 @@ const actions = {
     async getSearchList({commit},params={}) {
       // 当前这个reqGetSearchInfo这个函数获取服务器数据的时候至少传递一个参数（空对象）
     let result = await reqGetSearchInfo(params)
-    console.log(result)
       if (result.code == 200) {
         commit('GETSEARCHINFO',result.data)
       }

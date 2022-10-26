@@ -6,6 +6,8 @@ import Login from '@/views/Login/Login'
 import Register from '@/views/Register/Register'
 import Search from '@/views/Search/Search'
 import Detail from '@/views/Detail/Detail'
+import AddCartSuccess from '@/views/AddCartSuccess/AddCartSuccess'
+import ShopCart from '@/views/ShopCart/ShopCart'
 
 export default [
   // 路由重定向
@@ -31,4 +33,17 @@ export default [
     component: Detail,
     meta: { isShow: true },
   },
+  {
+    name: 'AddCartSuccess',
+    path: '/addCartSuccess',
+    component: AddCartSuccess,
+    meta: { isShow: true }
+  },
+  {
+    name: 'ShopCart',
+    path: '/shopcart',
+    component: ShopCart,
+    meta: {isShow: true}
+  }
+
 ]

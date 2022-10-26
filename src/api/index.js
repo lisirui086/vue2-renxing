@@ -15,4 +15,9 @@ export const reqFloorList = ()=> mockRequests({url:'/floor',method:'get'});
 export const reqGetSearchInfo = (params) => requests({ url: '/list', method: 'POST', data: params })
 // views/Detail/detail 获取产品详细信息的接口 URL: /api/item/{ skuId }
 export const reqGoodsInfo = (skuId) => requests({ url: `/item/${skuId}`, method: 'get' })
+// views/Detail/detail 7. 添加到购物车(对已有物品进行数量改动)
+// URL: /api/cart / addToCart / { skuId } / { skuNum } post请求
+export const reqAddOrUpdateShopCart = (skuId, skuNum) => requests({ url: `/cart/addToCart/${skuId}/${skuNum}`, method: 'post' })
+// 获取购物车列表
+export const reqCartList = () => requests({url: '/cart/cartList',method: 'get'})
 

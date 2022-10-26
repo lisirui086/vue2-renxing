@@ -7,36 +7,36 @@
     <section class="con">
       <!-- 导航路径区域 -->
       <div class="conPoin">
-        <span>{{categoryView.category1Name}}</span>
-        <span>{{categoryView.category2Name}}</span>
-        <span>{{categoryView.category3Name}}</span>
+        <span>{{ categoryView.category1Name }}</span>
+        <span>{{ categoryView.category2Name }}</span>
+        <span>{{ categoryView.category3Name }}</span>
       </div>
       <!-- 主要内容区域 -->
       <div class="mainCon">
         <!-- 左侧放大镜区域 -->
         <div class="previewWrap">
           <!--放大镜效果-->
-          <Zoom :skuImageList="skuImageList"/>
+          <Zoom :skuImageList="skuImageList" />
           <!-- 小图列表 -->
-          <ImageList :skuImageList="skuImageList"/>
+          <ImageList :skuImageList="skuImageList" />
         </div>
         <!-- 右侧选择区域布局 -->
         <div class="InfoWrap">
           <div class="goodsDetail">
-            <h3 class="InfoName">{{skuInfo.skuName}}</h3>
-            <p class="news">{{skuInfo.skuDesc}}</p>
+            <h3 class="InfoName">{{ skuInfo.skuName }}</h3>
+            <p class="news">{{ skuInfo.skuDesc }}</p>
             <div class="priceArea">
               <div class="priceArea1">
                 <div class="title">价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格</div>
                 <div class="price">
                   <i>¥</i>
-                  <em>{{skuInfo.price}}</em>
+                  <em>{{ skuInfo.price }}</em>
                   <span>降价通知</span>
                 </div>
                 <div class="remark">
                   <i>累计评价</i>
                   <!-- 伪评价数量 -->
-                  <em>{{skuInfo.category3Id}}</em>
+                  <em>{{ skuInfo.category3Id }}</em>
                 </div>
               </div>
               <div class="priceArea2">
@@ -64,20 +64,20 @@
           <div class="choose">
             <div class="chooseArea">
               <div class="choosed"></div>
-              <dl v-for="(option,index) in skuSaleAttrValueList" :key="option.id">
-                <dt class="title">{{option.saleAttrName}}</dt>
-                <dd changepirce="0" class="active">{{option.saleAttrValueName}}</dd>
+              <dl v-for="(option, index) in skuSaleAttrValueList" :key="option.id">
+                <dt class="title">{{ option.saleAttrName }}</dt>
+                <dd changepirce="0" class="active">{{ option.saleAttrValueName }}</dd>
               </dl>
 
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt">
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input autocomplete="off" class="itxt" v-model.number="skuNum" @change="changeSkuNum">
+                <a href="javascript:" class="plus" @click="skuNum++">+</a>
+                <a href="javascript:" class="mins" @click="skuNum > 1 ? skuNum-- : 1">-</a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a @click="addShopCart">加入购物车</a>
               </div>
             </div>
           </div>
@@ -338,18 +338,61 @@ export default {
     ImageList,
     Zoom
   },
+  data() {
+    return {
+      // 加购数量
+      skuNum: 1
+    }
+  },
   // 计算属性
   computed: {
     ...mapGetters(['categoryView', 'skuInfo', 'skuSaleAttrValueList']),
     // 设置skuImageList 的默认是空数组 解决开发者工具报错
     skuImageList() {
       return this.skuInfo.skuImageList || []
+    },
+    skuSaleAttrValueList() {
+      return this.skuInfo.skuSaleAttrValueList || []
     }
   },
   // 挂载后
   mounted() {
     // 组件挂在完毕后展示产品详细信息
     this.$store.dispatch('getGoodsInfo', this.$route.params.skuId)
+  },
+  methods: {
+    // 修改加购数量
+    changeSkuNum(event) {
+      // 用户输入进来的文本
+      let val = event.target.value * 1
+      // 如果用户输入进来的非法，出现NaN或小于1
+      if (isNaN(val) || val < 1) {
+        this.skuNum = 1
+      } else {
+        // 大于1的整数
+        this.skuNum = parseInt(val)
+      }
+    },
+    // 加入购物车的回调函数
+    async addShopCart() {
+      // 1. 在点击加入购物车这个按钮，做的第一件事将参数带给服务器通知服务器加入购物车的产品是谁
+      // 2. 需要知道这次请求成功还是失败，如果成功跳转下一路由，失败需要给用户提示
+      try {
+        // 成功
+        await this.$store.dispatch('addOrUpdateShopCart',{
+            skuId: this.$route.params.skuId,
+            skuNum: this.skuNum
+        })
+          // 3. 进行路由跳转
+          // 4. 在路由跳转的时候还需要将产品信息带下一级的路由组件
+        // 跳转到成功界面
+        sessionStorage.setItem('skuInfo',JSON.stringify(this.skuInfo))
+        this.$router.push({ name: 'AddCartSuccess',query:{skuNum:this.skuNum} })
+      } catch (error) {
+        // 失败回调
+        alert(error.message)
+      }
+    }
   }
 }
 </script>
