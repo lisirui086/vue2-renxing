@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 // 引入路由配置信息
 import routes from './routes.js'
+// 引入 stroe 仓库
+import store from '@/store'
 
 let originPush = VueRouter.prototype.push
 let originReplace = VueRouter.prototype.replace
@@ -44,7 +46,7 @@ VueRouter.prototype.replace = function (location, resolve, reject) {
 }
 
 Vue.use(VueRouter)
-
+// 对外暴露VueRouter类的实例
 const router = new VueRouter({
   // 配置路由规则
   routes,
@@ -52,6 +54,43 @@ const router = new VueRouter({
   scrollBehavior(to, from, savedPosition) {
     return { x: 0, y: 0 }
   },
+})
+// 配置路由守卫
+// 全局前置守卫 在路由跳转之前进行判断
+router.beforeEach(async (to, from, next) => {
+  // to 可以获取到你想跳转到哪个路由信息
+  // from 可以获取到你从哪个路由而来
+  // next 放行函数 next() 放行 next(path)放行到指定路由 next(False)
+  // 用户登录了才有token ,没登陆一定没有token
+  let token = store.state.user.token
+  let nickName = store.state.user.userInfo.nickName
+  // 判断用户是否登录
+  if (token) {
+    // 用户已经登录了还想去login页面 不放行,重新跳转到首页
+    if (to.path == '/login' || to.path == '/register') {
+      next('/home')
+    } else {
+      // 登录了，去的不是login 如果有用户名
+      if (nickName) {
+        next()
+      } else {
+        // 没有用户信息，派发cation让仓库存储用户信息再跳转
+        // 获取用户信息成功 再放行
+        try {
+          await store.dispatch('getUserInfo')
+          next()
+        } catch (error) {
+          // token失效了获取不到用户信息 重新登录 清除token  派发action
+          await store.dispatch('loginOut')
+          next('/login')
+        }
+      }
+    }
+  } else {
+    // 没有登录 暂时没有优化 后期完善
+    next()
+    console.log('没登陆');
+  }
 })
 
 export default router

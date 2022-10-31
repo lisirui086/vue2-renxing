@@ -48,7 +48,9 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" :checked="isAllCheck" @change="updateAllChecked($event)">
+        <input class="chooseAll" type="checkbox" 
+        :checked="isAllCheck" @change="updateAllChecked($event)"
+        :disabled="cartInfoList.length == 0">
         <span>全选</span>
       </div>
       <div class="option">
@@ -58,14 +60,14 @@
       </div>
       <div class="money-box">
         <div class="chosed">已选择
-          <span>{{ totalPrice }}</span>件商品
+          <span>{{ totalSum }}</span>件商品
         </div>
         <div class="sumprice">
           <em>总价（不含运费） ：</em>
           <i class="summoney">{{ totalPrice }}</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" target="_blank">结算</a>
+          <router-link class="sum-btn" to="/trade">结算</router-link>
         </div>
       </div>
     </div>
@@ -161,7 +163,7 @@ export default {
       try {
         // 获取修改前的全选checked值是多少
         let AllChecked = event.target.checked ? 1 : 0
-        await this.$store.dispatch('updateAllChecked',AllChecked)
+        await this.$store.dispatch('updateAllChecked', AllChecked)
         this.getShopCartDate()
       } catch (error) {
         alert(error.message)
@@ -183,9 +185,19 @@ export default {
       })
       return sum
     },
+    // 所有被勾选的商品件数
+    totalSum() {
+      let sum = 0
+      this.cartInfoList.filter(item => {
+        if (item.isChecked == 1) {
+          sum+=item.skuNum
+        }
+      })
+      return sum
+    },
     // 判断是否全选
     isAllCheck() {
-      return this.cartInfoList.every(item => item.isChecked == 1)
+      return this.cartInfoList.every(item => item.isChecked == 1) 
     }
   }
 }

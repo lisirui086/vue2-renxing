@@ -21,6 +21,10 @@ requests.interceptors.request.use((config) => {
     // 根据后端设置的 不能随意写 固定字段（userTempId)
     config.headers.userTempId = store.state.detail.uuid_token
   }
+  // 需要携带token带给服务器
+  if (store.state.user.token) {
+    config.headers.token = store.state.user.token
+  }
   // 进度条开始
   nprogress.start()
   return config

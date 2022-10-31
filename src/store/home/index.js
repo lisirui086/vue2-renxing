@@ -21,6 +21,9 @@ const actions = {
     let result = await reqFloorList()
     if (result.code == 200) {
       commit('GETFLOORLIST', result.data)
+      return 'getFloorList success'
+    } else {
+      return Promise.reject(new Error('falie'))
     }
   }
 }

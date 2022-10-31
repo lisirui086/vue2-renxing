@@ -15,6 +15,8 @@ import Pagination from '@/components/Pagination/Pagination'
 import '@/mock/mockServer.js'
 // 引入swiper
 import 'swiper/css/swiper.min.css' // 注意这里的引入
+// 统一引入 统一接口api文件夹里面的全部请求函数 不使用vuex管理的方法
+import * as API from '@/api'
 
 // 测试
 
@@ -33,5 +35,6 @@ new Vue({
   // 1. 全局事件总线
   beforeCreate() {
     Vue.prototype.$bus = this
+    Vue.prototype.$API = API
   }
 }).$mount('#app')
