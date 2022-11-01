@@ -3,12 +3,14 @@
     <div class="pay-container">
       <div class="checkout-tit">
         <h4 class="tit-txt">
-          <span class="success-icon"></span>
-          <span class="success-info">订单提交成功，请您及时付款，以便尽快为您发货~~</span>
+          <el-button type="success" icon="el-icon-check" circle></el-button>
+          <span class="success-info">
+            订单提交成功，请您及时付款，以便尽快为您发货~~
+          </span>
         </h4>
         <div class="paymark">
-          <span class="fl">请您在提交订单<em class="orange time">4小时</em>之内完成支付，超时订单会自动取消。订单号：<em>{{orderId}}</em></span>
-          <span class="fr"><em class="lead">应付金额：</em><em class="orange money">￥{{payInfo.totalFee}}</em></span>
+          <span class="fl">请您在提交订单<em class="orange time">4小时</em>之内完成支付，超时订单会自动取消。订单号：<em>{{ orderId }}</em></span>
+          <span class="fr"><em class="lead">应付金额：</em><em class="orange money">￥{{ payInfo.totalFee }}</em></span>
         </div>
       </div>
       <div class="checkout-info">
@@ -65,7 +67,7 @@
         <div class="hr"></div>
 
         <div class="submit">
-          <a class="btn">立即支付</a>
+          <a class="btn" @click="openPay">立即支付</a>
         </div>
         <div class="otherpay">
           <div class="step-tit">
@@ -82,12 +84,18 @@
 </template>
 
 <script>
+// 引入qrcode
+import QRCode from 'qrcode'
 export default {
   name: 'Pay',
   data() {
     return {
       // 支付订单的信息
-      payInfo: {}
+      payInfo: {},
+      // 查看支付状态的定时器
+      timer: null,
+      // 支付状态码
+      code: ''
     }
   },
   mounted() {
@@ -95,11 +103,46 @@ export default {
   },
   // 方法
   methods: {
+    // 通过订单编号获取支付信息
     async getPayInfo() {
       let result = await this.$API.reqPayInfo(this.orderId)
       // 如果成功： 组件当中存储支付信息
       if (result.code == 200) {
         this.payInfo = result.data
+      }
+    },
+    // 打开支付二维码
+    async openPay() {
+      let url = await QRCode.toDataURL(this.payInfo.codeUrl)
+      this.$alert(`<img src=${url} />`, '请使用微信支付', {
+        dangerouslyUseHTMLString: true,       // 是否将 message 属性作为 HTML 片段处理
+        center: true,                         // 是否居中布局 
+        showCancelButton: true,               // 是否显示取消按钮
+        confirmButtonText: '已经支付成功',     // 确定按钮的文本内容
+        cancelButtonText: '支付遇到问题',      // 取消按钮的文本内容
+        showClose: false,                     // MessageBox 是否显示右上角关闭按钮
+      })
+      // 你需要知道支付成功或失败的状态
+      // 支付成功路由需要跳转，如果失败弹窗提示
+      // 定时器没有，开启一个定时器
+      if (!this.timer) {
+         this.timer = setInterval(async () => {
+          // 发请求获取用户支付状态
+           let result = await this.$API.reqPayStatus(this.orderId)
+          // 不想花钱可以把result.code == 205 原本是支付中，在这里我们测试改205等于支付成功
+          // 原 code==200 支付成功，code==205支付中 为了测试我们改成205
+          if (result.code == 205) {
+            // 清除定时器，它不会自动停止需要我们关闭
+            clearInterval(this.timer)
+            this.timer = null
+            // 保存支付成功的code
+            this.code = result.code 
+            // 关闭支付弹窗
+            this.$msgbox.close()
+            // 跳转到支付成功的路由
+            this.$router.push('/paysucces')
+          }
+        },2000)
       }
     }
   },

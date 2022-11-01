@@ -10,6 +10,10 @@ import AddCartSuccess from '@/views/AddCartSuccess/AddCartSuccess'
 import ShopCart from '@/views/ShopCart/ShopCart'
 import Trade from '@/views/Trade'
 import Pay from '@/views/Pay'
+import PaySuccess from '@/views/PaySuccess'
+import Center from '@/views/Center'
+import MyOrder from '@/views/Center/myOrder'
+import GroupOrder from '@/views/Center/groupOrder'
 
 export default [
   // 路由重定向
@@ -58,5 +62,24 @@ export default [
     path: '/pay',
     component: Pay,
     meta: {isShow: false}
+  },
+  {
+    name: 'PaySuccess',
+    path: '/paysucces',
+    component: PaySuccess,
+    meta: {isShow:false}
+  },
+  {
+    name: 'Center',
+    path: '/center',
+    component: Center,
+    meta: { isShow: false },
+    children: [
+  // 默认子路由 如果children数组中，某个路由规则的path值为空字符串，则这条路由规则叫默认子路由
+      // { path: '', component: MyOrder },
+      { path: '/center', redirect: '/center/myorder' },
+      { path: 'myorder', component: MyOrder },
+      { path: 'grouporder', component: GroupOrder }
+    ]
   }
 ]

@@ -5,7 +5,7 @@
       <h5 class="receive">收件人信息</h5>
       <div class="address clearFix" v-for="(address, index) in addressInfo" :key="address.id">
         <span class="username" :class="{ selected: address.isDefault == '1' }">{{ address.consignee }}</span>
-        <p @click="changeDefault(address, addressInfo)">
+        <p @click="changeDefault(address)">
           <span class="s1">{{ address.fullAddress }}</span>
           <span class="s2">{{ address.phoneNum }}</span>
           <span class="s3" v-show="address.isDefault == '1'">默认地址</span>
@@ -120,6 +120,9 @@ export default {
     // 商品清单总件数
     totalCount() {
       let sum = 0
+      if (!this.detailArrayList) {
+        return;
+      }
       this.detailArrayList.forEach(item => sum += item.skuNum)
       return sum
     }
@@ -127,9 +130,13 @@ export default {
   // 方法
   methods: {
     // 修改默认地址
-    changeDefault(address, addressInfo) {
-      addressInfo.forEach(item => item.isDefault = 0)
-      address.isDefault = 1
+    changeDefault(address) {
+      // 这是对所有收货地址循环设置
+      this.addressInfo.forEach((item) => {
+        item.isDefault = "0"
+      })
+      // 对选中的地址设为默认地址
+      address.isDefault = "1"
     },
     // 提交订单
     async submitOrder() {

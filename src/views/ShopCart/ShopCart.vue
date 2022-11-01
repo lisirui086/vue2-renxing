@@ -173,7 +173,7 @@ export default {
   // 计算属性
   computed: {
     ...mapState({
-      cartInfoList: state => state.cartList.cartInfoList
+      cartInfoList: state => state.cartList.cartInfoList || []
     }),
     // 所有被勾选的商品总价
     totalPrice() {
