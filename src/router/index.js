@@ -4,6 +4,8 @@ import VueRouter from 'vue-router'
 import routes from './routes.js'
 // 引入 stroe 仓库
 import store from '@/store'
+// 导入需要有权限的模块，共享数组
+import pathArr from '@/router/pathArr.js'
 
 let originPush = VueRouter.prototype.push
 let originReplace = VueRouter.prototype.replace
@@ -88,8 +90,16 @@ router.beforeEach(async (to, from, next) => {
     }
   } else {
     // 没有登录 暂时没有优化 后期完善
-    next()
-    console.log('没登陆');
+    // 可进入的路由 login register home search '/detail/:skuId'
+    // 不可进入的路由 addCartSuccess shopcart trade pay paysucces center
+    if (pathArr.indexOf(to.path) !== -1) {
+      let pathArrKey = pathArr.indexOf(to.path)
+      let toPath = pathArr[pathArrKey]
+      next('/login?redirect='+toPath)
+    } else {
+      next()
+      console.log('没登陆')
+    }
   }
 })
 

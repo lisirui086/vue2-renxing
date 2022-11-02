@@ -66,7 +66,8 @@
                   <div class="p-img">
                     <router-link :to="`/detail/${goods.id}`">
                       <!-- 在路由跳转的时候切记要带商品的id (params参数) -->
-                      <img :src="goods.defaultImg" />
+                      <!-- 图片懒加载 -->
+                      <img v-lazy="goods.defaultImg" />
                     </router-link>
                   </div>
                   <div class="price">

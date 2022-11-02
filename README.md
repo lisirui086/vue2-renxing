@@ -74,3 +74,15 @@ jsconfig.json
 key ：URL（地址栏中的路径）
 value：相应的路由组件
 ```
+
+## vee-validate
+```
+只能说这个插件，没有深究，这部分是完全看老师写的然后提示中文没有引用。https://blog.csdn.net/fd2025/article/details/124298824
+跟着这位博主做成功了。
+```
+
+### 购物车页面
+```
+存在bug，控制台提示cartlist不存在，因为没有给 || []，新增如果都没购物车内没商品提示购物
+v-show
+```

@@ -22,12 +22,12 @@
     <!-- 订单信息 -->
     <div class="orders">
       <!-- 每一次下单的订单 -->
-      <table class="order-item" v-for="(order,index) in myOrder.records" :key="order.id">
+      <table class="order-item" v-for="(order, index) in myOrder.records" :key="order.id">
         <!-- records 信息 -->
         <thead>
           <tr>
             <th colspan="5">
-              <span class="ordertitle">{{order.createTime}}　订单编号: {{order.outTradeNo}}
+              <span class="ordertitle">{{ order.createTime }}　订单编号: {{ order.outTradeNo }}
                 <span class="pull-right delete">
                   <img src="../images/delete.png">
                 </span>
@@ -37,67 +37,51 @@
         </thead>
         <tbody>
           <!-- 商品信息 -->
-          <tr v-for="(goods,index) in order.orderDetailList" :key="goods.id">
+          <tr v-for="(goods, index) in order.orderDetailList" :key="goods.id">
             <td width="60%">
               <div class="typographic">
                 <img style="width:82px;heigth:82px" :src="goods.imgUrl">
-                <a href="#" class="block-text">{{goods.skuName}}}</a>
-                <span>x{{goods.skuNum}}</span>
+                <a href="#" class="block-text">{{ goods.skuName }}}</a>
+                <span>x{{ goods.skuNum }}</span>
                 <a href="#" class="service">售后申请</a>
               </div>
             </td>
-            <td :rowspan="order.orderDetailList.length" width="8%" class="center">{{order.consignee}}</td>
-            <td :rowspan="order.orderDetailList.length" width="13%" class="center">
-              <ul class="unstyled">
-                <li>总金额¥{{goods.orderPrice}}</li>
-                <li>{{goods.sourceType}}</li>
-              </ul>
-            </td>
-            <!-- 订单状态 -->
-            <td :rowspan="order.orderDetailList.length" width="8%" class="center">
-              <a href="#" class="btn">{{order.orderStatusName}} </a>
-            </td>
-            <td :rowspan="order.orderDetailList.length" width="13%" class="center">
-              <ul class="unstyled">
-                <li>
-                  <a href="mycomment.html" target="_blank">评价|晒单</a>
-                </li>
+            <!-- template不会解析成标签 v-for和f-if尽量避免同时使用 放这个可以少写重复的几行 -->
+            <template v-if="index == 0">
+              <td :rowspan="order.orderDetailList.length" width="8%" class="center">{{ order.consignee }}</td>
+              <td :rowspan="order.orderDetailList.length" width="13%" class="center">
+                <ul class="unstyled">
+                  <li>总金额¥{{ goods.orderPrice }}</li>
+                  <li>{{ goods.orderStatusName }}</li>
+                </ul>
+              </td>
+              <!-- 订单状态 -->
+              <td :rowspan="order.orderDetailList.length" width="8%" class="center">
+                <a href="#" class="btn">{{ order.orderStatusName }} </a>
+              </td>
+              <td :rowspan="order.orderDetailList.length" width="13%" class="center">
+                <ul class="unstyled">
+                  <li>
+                    <a href="mycomment.html" target="_blank">评价|晒单</a>
+                  </li>
 
-              </ul>
-            </td>
+                </ul>
+              </td>
+            </template>
           </tr>
         </tbody>
       </table>
     </div>
     <!-- 分页 -->
     <div class="choose-order">
-      <div class="pagination">
-        <ul>
-          <li class="prev disabled">
-            <a href="javascript:">«上一页</a>
-          </li>
-          <li class="page actived">
-            <a href="javascript:">1</a>
-          </li>
-          <li class="page">
-            <a href="javascript:">2</a>
-          </li>
-          <li class="page">
-            <a href="javascript:">3</a>
-          </li>
-          <li class="page">
-            <a href="javascript:">4</a>
-          </li>
-
-          <li class="next disabled">
-            <a href="javascript:">下一页»</a>
-          </li>
-        </ul>
-        <div>
-          <span>&nbsp;&nbsp;&nbsp;&nbsp;共2页&nbsp;</span>
-        </div>
-      </div>
+    <!-- 分页 默认展示第一页，每一页展示3条数据，总共有多少数据 -->
+      <Pagination :pageNo="page" 
+      :pageSize="limit" 
+      :total="myOrder.total" 
+      :continues="5"
+      @getPageNo='getPageNo' />
     </div>
+
   </div>
 </template>
 
@@ -126,6 +110,11 @@ export default {
       if (result.code == 200) {
         this.myOrder = result.data
       }
+    },
+    // 获取点击了第几页的数据 这里传page但是分页器那没有page是因为通过$event获得的
+    getPageNo(page) {
+      this.page = page
+      this.getMyOrderList()
     }
   }
 }

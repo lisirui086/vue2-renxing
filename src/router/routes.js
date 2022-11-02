@@ -24,7 +24,7 @@ export default [
     component: Home,
     meta: { isShow: true },
   },
-  { path: '/login', component: Login, meta: { isShow: true } },
+  { path: '/login', component: Login, meta: { isShow: false } },
   { path: '/register', component: Register, meta: { isShow: false } },
   // /search/:keyword? 加上问号，代表该参数可传可不传
   {
@@ -49,20 +49,38 @@ export default [
     name: 'ShopCart',
     path: '/shopcart',
     component: ShopCart,
-    meta: {isShow: true}
+    meta: { isShow: true }
   },
   {
     name: 'Trade',
     path: '/trade',
     component: Trade,
-    meta: {isShow: false}
+    meta: { isShow: false },
+    // 路由独享的守卫 不能让用户在地址栏输入路径直接进这，必须从购物车点结算后才可以
+    beforeEnter: (to, from, next) => {
+      if (from.path == '/shopcart') {
+        next()
+      } else {
+        // 其他路由组件而来的停留在当前
+        next(false)
+      }
+    }
   },
   {
     name: 'Pay',
     path: '/pay',
     component: Pay,
-    meta: {isShow: false}
+    meta: { isShow: false },
+    // 必须从Trade才能进入 这里我用路由配置信息的name
+    beforeEnter: (to, from, next) => {
+      if (from.name == 'Trade') {
+        next()
+      } else {
+        next(false)
+      }
+    }
   },
+  // 结算成功也可以用路由独享的守卫，但是我们选择组件内路由守卫为了多练习一下
   {
     name: 'PaySuccess',
     path: '/paysucces',

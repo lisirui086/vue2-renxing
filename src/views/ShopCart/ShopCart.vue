@@ -10,7 +10,7 @@
         <div class="cart-th5">小计（元）</div>
         <div class="cart-th6">操作</div>
       </div>
-      <div class="cart-body">
+      <div class="cart-body" v-show="cartInfoList.length">
         <ul class="cart-list" v-for="(shop, index) in cartInfoList" :key="shop.id">
           <!-- 产品是否被勾选 -->
           <li class="cart-list-con1">
@@ -45,12 +45,14 @@
           </li>
         </ul>
       </div>
+      <div class="cart-body" v-show="!cartInfoList.length">
+        <span class="tisp">购物车空空如也，快去挑选喜爱的商品吧~</span>
+      </div>
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" 
-        :checked="isAllCheck" @change="updateAllChecked($event)"
-        :disabled="cartInfoList.length == 0">
+        <input class="chooseAll" type="checkbox" :checked="isAllCheck" @change="updateAllChecked($event)"
+          :disabled="cartInfoList.length == 0">
         <span>全选</span>
       </div>
       <div class="option">
@@ -190,14 +192,14 @@ export default {
       let sum = 0
       this.cartInfoList.filter(item => {
         if (item.isChecked == 1) {
-          sum+=item.skuNum
+          sum += item.skuNum
         }
       })
       return sum
     },
     // 判断是否全选
     isAllCheck() {
-      return this.cartInfoList.every(item => item.isChecked == 1) 
+      return this.cartInfoList.every(item => item.isChecked == 1)
     }
   }
 }
@@ -212,6 +214,13 @@ export default {
     margin: 9px 0;
     font-size: 14px;
     line-height: 21px;
+  }
+
+  .tisp {
+    width: 33.333%;
+    line-height: 80px;
+    font-size: 25px;
+    color: #ff0011;
   }
 
   .cart-main {

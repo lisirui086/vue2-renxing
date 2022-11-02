@@ -1,6 +1,9 @@
 <template>
   <!-- 头部 -->
+  
   <header class="header">
+    <!-- 自定义插件 测试 -->
+    <h1 v-upper="msg"></h1>
     <!-- 头部的第一行 -->
     <div class="top">
       <div class="container">
@@ -50,7 +53,8 @@ export default {
   name: 'Header',
   data() {
     return {
-      keyword: ''
+      keyword: '',
+      msg: 'asd'
     }
   },
   mounted() {
