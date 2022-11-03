@@ -2,9 +2,10 @@
 
 // 引入路由组件
 import Home from '@/views/Home/Home'
-import Login from '@/views/Login/index.vue'
+// 替换成了路由懒加载
+/* import Login from '@/views/Login/index.vue'
 import Register from '@/views/Register/index.vue'
-import Search from '@/views/Search/Search'
+import Search from '@/views/Search/Search'  */
 import Detail from '@/views/Detail/Detail'
 import AddCartSuccess from '@/views/AddCartSuccess/AddCartSuccess'
 import ShopCart from '@/views/ShopCart/ShopCart'
@@ -24,13 +25,13 @@ export default [
     component: Home,
     meta: { isShow: true },
   },
-  { path: '/login', component: Login, meta: { isShow: false } },
-  { path: '/register', component: Register, meta: { isShow: false } },
+  { path: '/login', component: () => import('@/views/Login'), meta: { isShow: false } },
+  { path: '/register', component: () => import('@/views/Register'), meta: { isShow: false } },
   // /search/:keyword? 加上问号，代表该参数可传可不传
   {
     name: 'search',
     path: '/search/:keyword?',
-    component: Search,
+    component: () => import('@/views/Search/Search.vue'),
     meta: { isShow: true },
   },
   {
