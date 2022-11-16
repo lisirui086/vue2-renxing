@@ -100,5 +100,18 @@ export default [
       { path: 'myorder', component: MyOrder },
       { path: 'grouporder', component: GroupOrder }
     ]
+  },
+  // 组件高级通信 这里都是用懒加载
+  {
+    path: '/communication',
+    component: () => import('@/views/Communication'),
+    children: [
+      { path: 'attrslisteners',component:() => import('@/views/Communication/AttrsListeners') },
+      { path: 'childrenparent', component: () => import('@/views/Communication/ChildrenParent') },
+      { path: 'eventtest', component: () => import('@/views/Communication/EventTest') },
+      { path: 'modeltest', component: () => import('@/views/Communication/ModelTest') },
+      { path: 'scopeslot', component: () => import('@/views/Communication/ScopeSlot') },
+      { path: 'synctest', component: () => import('@/views/Communication/SyncTest') },
+    ]
   }
 ]
