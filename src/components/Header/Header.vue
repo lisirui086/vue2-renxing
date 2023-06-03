@@ -1,14 +1,11 @@
 <template>
   <!-- 头部 -->
-  
   <header class="header">
-    <!-- 自定义插件 测试 -->
-    <h1 v-upper="msg"></h1>
     <!-- 头部的第一行 -->
     <div class="top">
       <div class="container">
         <div class="loginList">
-          <p>尚品汇欢迎您！</p>
+          <p>任真美好欢迎您！</p>
           <p v-if="!nickName">
             <span>请</span>
             <router-link to="/login">登录</router-link>
@@ -22,10 +19,10 @@
         <div class="typeList">
           <router-link to="/trade">我的订单</router-link>
           <router-link to="/shopcart">我的购物车</router-link>
-          <a href="###">我的尚品汇</a>
-          <a href="###">尚品汇会员</a>
+          <a href="###">我的任性</a>
+          <a href="###">任性会员</a>
           <a href="###">企业采购</a>
-          <a href="###">关注尚品汇</a>
+          <a href="###">关注任性板娘</a>
           <a href="###">合作招商</a>
           <a href="###">商家后台</a>
         </div>
@@ -34,8 +31,8 @@
     <!--头部第二行 搜索区域-->
     <div class="bottom">
       <h1 class="logoArea">
-        <router-link class="logo" title="尚品汇" to="/home">
-          <img src="./images/logo.png" alt="尚品汇">
+        <router-link class="logo" title="任真美好" to="/home">
+          <img src="./images/logo.png" alt="任真美好">
         </router-link>
       </h1>
       <div class="searchArea">
